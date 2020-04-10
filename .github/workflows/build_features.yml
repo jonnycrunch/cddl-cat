@@ -7,14 +7,14 @@ on:
     branches: [ master ]
 
 jobs:
-  cargo-toolchain-check:
+  cargo-build:
     strategy:
       matrix:
+        features: ["serde_cbor", "serde_json"]
         rust_toolchain: [stable]
         os: [ubuntu-latest]
-        features: ["serde_cbor", "serde_json"]
 
-    name: Install toolchain and run "check"
+    name: Build
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout

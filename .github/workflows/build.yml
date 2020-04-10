@@ -7,13 +7,13 @@ on:
     branches: [ master ]
 
 jobs:
-  cargo-toolchain-check:
+  cargo-build:
     strategy:
       matrix:
         rust_toolchain: [stable, nightly, 1.37.0]
         os: [ubuntu-latest]
 
-    name: Install toolchain and run "check"
+    name: Build
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
@@ -35,5 +35,4 @@ jobs:
       - name: Test with default features
         uses: actions-rs/cargo@v1
         with:
-          command: cargo test
-          args: --all --bins --examples --tests
+          command: test
