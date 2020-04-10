@@ -7,16 +7,33 @@ on:
     branches: [ master ]
 
 jobs:
-  cargo-build-test:
-    name: Build and test with the stable Rust toolchain
-    runs-on: ubuntu-latest
+  cargo-toolchain-check:
+    strategy:
+      matrix:
+        rust_toolchain: [stable, nightly, 1.37.0]
+        os: [ubuntu-latest]
 
+    name: Install toolchain and run "check"
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: checkout
-      uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
 
-    - name: cargo build
-      run: cargo build
+      - name: install rust toolchain ${{ matrix.rust_toolchain }}
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust_toolchain }}
+          override: true
 
-    - name: cargo test
-      run: cargo test
+      - name: cargo build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all --bins --examples --tests
+
+      - name: Test with default features
+        uses: actions-rs/cargo@v1
+        with:
+          command: cargo test
+          args: --all --bins --examples --tests
