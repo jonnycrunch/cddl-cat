@@ -1,0 +1,32 @@
+name: Check with different toolchains
+
+on:
+  push:
+    branches: [ ci_testing ]
+  pull_request:
+
+jobs:
+  cargo-toolchain-check:
+    strategy:
+      matrix:
+        rust_toolchain: [1.37.0]
+        os: [ubuntu-latest]
+
+    name: Install toolchain and run "check"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: install rust toolchain ${{ matrix.rust_toolchain }}
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust_toolchain }}
+          override: true
+
+      - name: Check compilation with default features
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --all --bins --examples --tests
