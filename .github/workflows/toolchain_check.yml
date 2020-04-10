@@ -9,7 +9,7 @@ jobs:
   cargo-toolchain-check:
     strategy:
       matrix:
-        rust_toolchain: [1.37.0]
+        rust_toolchain: [1.37.0, nightly]
         os: [ubuntu-latest]
 
     name: Install toolchain and run "check"
